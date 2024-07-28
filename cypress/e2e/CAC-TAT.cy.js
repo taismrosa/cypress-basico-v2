@@ -39,4 +39,44 @@ describe("Central de Atendimento ao Cliente TAT", () => {
       .type("Teste com caracteres não numéricos! @-=;./'?*&¨%$#$~^`´")
       .should("have.value", "");
   });
+
+  it("exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário", () => {
+    cy.get("#firstName").type("Taís");
+    cy.get("#lastName").type("Medeiros");
+    cy.get("#email").type("taismedeirosdarosa@gmail.com");
+    cy.get("#phone-checkbox").check();
+    cy.get("#open-text-area").type("Texto de teste ");
+    cy.get("button[type='submit']").click();
+    cy.get(".error strong")
+      .should("be.visible")
+      .and("have.text", "Valide os campos obrigatórios!");
+  });
+
+  it.only("preenche e limpa os campos nome, sobrenome, email e telefone", () => {
+    const firstName = "Taís";
+    const lastName = "Medeiros";
+    const email = "taismedeirosdarosa@gmail";
+    const phone = "999999999";
+
+    cy.get("#firstName")
+      .type(firstName)
+      .should("have.value", firstName)
+      .clear()
+      .should("have.value", "");
+    cy.get("#lastName")
+      .type(lastName)
+      .should("have.value", lastName)
+      .clear()
+      .should("have.value", "");
+    cy.get("#email")
+      .type(email)
+      .should("have.value", email)
+      .clear()
+      .should("have.value", "");
+    cy.get("#phone")
+      .type(phone)
+      .should("have.value", phone)
+      .clear()
+      .should("have.value", "");
+  });
 });
