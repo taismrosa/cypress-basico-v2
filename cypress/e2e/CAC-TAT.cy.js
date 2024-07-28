@@ -17,7 +17,7 @@ describe("Central de Atendimento ao Cliente TAT", () => {
       "Texto de teste teste teste teste teste teste teste teste teste teste teste teste teste teste teste teste teste",
       { delay: 0 }
     );
-    cy.get("button[type='submit']").click();
+    cy.contains("button", "Enviar").click();
     cy.get(".success strong")
       .should("be.visible")
       .and("have.text", "Mensagem enviada com sucesso.");
@@ -28,7 +28,7 @@ describe("Central de Atendimento ao Cliente TAT", () => {
     cy.get("#lastName").type("Medeiros");
     cy.get("#email").type("taismedeirosdarosa@gmail");
     cy.get("#open-text-area").type("Texto de teste ");
-    cy.get("button[type='submit']").click();
+    cy.contains("button", "Enviar").click();
     cy.get(".error strong")
       .should("be.visible")
       .and("have.text", "Valide os campos obrigatórios!");
@@ -46,13 +46,13 @@ describe("Central de Atendimento ao Cliente TAT", () => {
     cy.get("#email").type("taismedeirosdarosa@gmail.com");
     cy.get("#phone-checkbox").check();
     cy.get("#open-text-area").type("Texto de teste ");
-    cy.get("button[type='submit']").click();
+    cy.contains("button", "Enviar").click();
     cy.get(".error strong")
       .should("be.visible")
       .and("have.text", "Valide os campos obrigatórios!");
   });
 
-  it.only("preenche e limpa os campos nome, sobrenome, email e telefone", () => {
+  it("preenche e limpa os campos nome, sobrenome, email e telefone", () => {
     const firstName = "Taís";
     const lastName = "Medeiros";
     const email = "taismedeirosdarosa@gmail";
@@ -78,5 +78,24 @@ describe("Central de Atendimento ao Cliente TAT", () => {
       .should("have.value", phone)
       .clear()
       .should("have.value", "");
+  });
+
+  it("exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios", () => {
+    cy.contains("button", "Enviar").click();
+    cy.get(".error strong")
+      .should("be.visible")
+      .and("have.text", "Valide os campos obrigatórios!");
+  });
+
+  it("envia o formulário com sucesso usando um comando customizado", () => {
+    cy.fillMandatoryFieldsAndSubmit(
+      "Taís",
+      "Medeiros",
+      "taismedeirosdarosa@gmail.com",
+      "Texto de teste"
+    );
+    cy.get(".success strong")
+      .should("be.visible")
+      .and("have.text", "Mensagem enviada com sucesso.");
   });
 });
